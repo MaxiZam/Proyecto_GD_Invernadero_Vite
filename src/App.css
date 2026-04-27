@@ -1,0 +1,279 @@
+#app {
+  padding: 0;
+}
+
+/* Reset y Estructura Base */
+.layout-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #0f0f0f;
+  color: #efefef;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Navbar Adaptativa */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 5%;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+}
+.logo { font-weight: bold; color: #4ade80; }
+.nav-links { display: flex; gap: 1.5rem; }
+.nav-links a { color: #ccc; text-decoration: none; font-size: 0.9rem; }
+
+/* Contenedor Principal */
+.main-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.top-bar {
+  padding: 1rem 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.status-indicator {
+  font-size: 0.8rem;
+  background: #222;
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dot { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; display: inline-block; }
+
+/* GRID RESPONSIVO (La magia ocurre aquí) */
+.dashboard-grid {
+  display: flex;
+  flex-direction: row; /* Horizontal en pantallas grandes */
+  flex-wrap: wrap;
+  width: 100%;
+  height: 60vh; /* Altura para el área 3D */
+}
+
+.canvas-wrapper {
+  flex: 3; /* Ocupa más espacio */
+  min-width: 300px;
+  height: 100%;
+  background: #000;
+}
+
+.stats-panel {
+  flex: 1; /* Ocupa menos espacio lateral */
+  min-width: 250px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+  background: #161616;
+}
+
+/* Tarjetas */
+.stat-card {
+  background: #222;
+  padding: 1rem;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid #333;
+}
+.label { font-size: 0.75rem; color: #888; text-transform: uppercase; }
+.value { font-size: 1.5rem; font-weight: bold; color: #4ade80; }
+
+/* Media Query para Pantallas Pequeñas */
+@media (max-width: 768px) {
+  .dashboard-grid {
+    flex-direction: column; /* Cambia a vertical */
+    height: auto;
+  }
+  .canvas-wrapper {
+    height: 400px; /* Altura fija en móviles */
+  }
+  .navbar span { display: none; } /* Oculta texto del logo si es muy pequeño */
+}
+
+.footer {
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.7rem;
+  color: #666;
+  border-top: 1px solid #222;
+}
+
+/* -------------------- Seccion de Analisis -------------------------------*/
+
+.analysis-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 2rem 5%;
+  background: #111;
+}
+
+.analysis-card {
+  background: #1a1a1a;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #333;
+}
+
+.analysis-card h3 {
+  color: #4ade80;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+/* Placeholder de Gráficos */
+.chart-placeholder {
+  height: 150px;
+  background: #0a0a0a;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+}
+
+.mock-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  height: 50px;
+  margin-top: 10px;
+}
+
+.bar {
+  width: 15px;
+  background: #4ade80;
+  border-radius: 3px 3px 0 0;
+  opacity: 0.6;
+}
+
+/* Lista de Informes */
+.report-list {
+  list-style: none;
+  padding: 0;
+}
+
+.report-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #222;
+  font-size: 0.9rem;
+}
+
+.btn-report {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 10px;
+  background: #4ade80;
+  border: none;
+  border-radius: 6px;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-report:hover {
+  background: #38c172;
+}
+
+/* Ajuste responsivo */
+@media (max-width: 768px) {
+  .analysis-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ----------------------------PANEL DE ACTUADORES ------------------------------*/
+.controls-section {
+  padding: 2rem 5%;
+  background: #151515;
+  border-top: 1px solid #333;
+}
+
+.section-title {
+  margin-bottom: 1.5rem;
+}
+
+.section-title h2 {
+  color: #4ade80;
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.section-title p {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.controls-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.control-card {
+  background: #222;
+  padding: 1.2rem;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #333;
+  transition: all 0.3s ease;
+}
+
+.active-bg {
+  border-color: #4ade80;
+  background: #1a2e21;
+}
+
+.control-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 500;
+}
+
+.icon {
+  font-size: 1.5rem;
+}
+
+.switch-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  background: #333;
+  color: #ccc;
+  transition: 0.2s;
+}
+
+.active-bg .switch-btn {
+  background: #4ade80;
+  color: #000;
+}
+
+.switch-btn:hover {
+  opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .controls-grid {
+    grid-template-columns: 1fr;
+  }
+}
