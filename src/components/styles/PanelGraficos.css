@@ -1,0 +1,132 @@
+/* ─── Sección gráficos ───────────────────────────────────────────── */
+.charts-section {
+  padding    : 2rem 5%;
+  background : #090f09;
+  border-top : 1px solid #1a301a;
+}
+
+.section-header {
+  display    : flex;
+  align-items: center;
+  gap        : 1rem;
+  flex-wrap  : wrap;
+  margin-bottom: 1.8rem;
+}
+
+.section-badge {
+  font-family   : 'Courier New', monospace;
+  font-size     : 0.65rem;
+  font-weight   : 700;
+  letter-spacing: 0.12em;
+  color         : #4ade80;
+  background    : #0a2a0a;
+  border        : 1px solid #2a5a2a;
+  padding       : 3px 10px;
+  border-radius : 4px;
+}
+
+.section-header h2 {
+  font-family: 'Georgia', serif;
+  color      : #e8f5e8;
+  font-size  : 1.4rem;
+  margin     : 0;
+}
+
+/* ─── Layout ─────────────────────────────────────────────────────── */
+.charts-layout {
+  display              : grid;
+  grid-template-columns: 1fr 1fr;
+  gap                  : 1.4rem;
+}
+
+.chart-card {
+  background   : #111a11;
+  border       : 1px solid #1f3a1f;
+  border-radius: 14px;
+  padding      : 1.2rem 1rem 0.8rem;
+}
+
+.chart-card--scatter { grid-column: 1 / -1; }
+
+/* ─── Títulos y stats ────────────────────────────────────────────── */
+.chart-title {
+  font-family   : 'Courier New', monospace;
+  font-size     : 0.72rem;
+  color         : #5a8a5a;
+  display       : flex;
+  align-items   : center;
+  gap           : 8px;
+  flex-wrap     : wrap;
+  margin-bottom : 0.8rem;
+  letter-spacing: 0.04em;
+}
+
+.chart-stats {
+  margin-left: auto;
+  display    : flex;
+  gap        : 1rem;
+  font-size  : 0.68rem;
+  color      : #4a7a4a;
+}
+
+.chart-stats strong { color: #e8f5e8; }
+
+/* ─── Indicadores de color ───────────────────────────────────────── */
+.dot-red   { width: 8px; height: 8px; border-radius: 50%; background: #ff6644; display: inline-block; flex-shrink: 0; }
+.dot-blue  { width: 8px; height: 8px; border-radius: 50%; background: #38bdf8; display: inline-block; flex-shrink: 0; }
+.dot-green { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; display: inline-block; flex-shrink: 0; }
+
+/* ─── SVG ────────────────────────────────────────────────────────── */
+.chart-svg { width: 100%; height: auto; display: block; }
+
+/* ─── Scatter ────────────────────────────────────────────────────── */
+.scatter-wrap {
+  display    : flex;
+  align-items: center;
+  gap        : 1.5rem;
+}
+
+.scatter-svg { flex: 1; max-width: 320px; }
+
+/* ─── Leyenda de correlación ─────────────────────────────────────── */
+.corr-legend {
+  display       : flex;
+  flex-direction: column;
+  gap           : 0.6rem;
+  font-family   : 'Courier New', monospace;
+  font-size     : 0.72rem;
+  color         : #5a8a5a;
+}
+
+.corr-row {
+  display    : flex;
+  align-items: center;
+  gap        : 8px;
+}
+
+.corr-dot {
+  width        : 8px;
+  height       : 8px;
+  border-radius: 50%;
+  background   : #ff8844;
+  display      : inline-block;
+}
+
+.corr-line {
+  width     : 20px;
+  height    : 2px;
+  background: #4ade80;
+  display   : inline-block;
+  opacity   : 0.7;
+}
+
+.corr-strength { margin-top: 0.8rem; font-size: 0.8rem; color: #7aaa7a; }
+.corr-strength strong { font-size: 1rem; }
+
+/* ─── Responsive ─────────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .charts-layout        { grid-template-columns: 1fr; }
+  .chart-card--scatter  { grid-column: 1; }
+  .scatter-wrap         { flex-direction: column; align-items: flex-start; }
+  .chart-stats          { margin-left: 0; }
+}
