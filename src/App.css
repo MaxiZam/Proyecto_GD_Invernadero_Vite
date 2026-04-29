@@ -200,9 +200,10 @@ body {
 }
 
 .canvas-wrapper {
-  flex      : 1;
+  flex: 1;
   background: #050a05;
   overflow  : hidden;
+  height: 100%;
 }
 
 /* ─── Actuadores Panel ───────────────────────────────────────────── */
@@ -372,18 +373,191 @@ body {
   letter-spacing: 0.06em;
 }
 
-/* ─── Responsive ─────────────────────────────────────────────────── */
-@media (max-width: 900px) {
-  .twin-layout { flex-direction: column; height: auto; }
-  .canvas-wrapper { height: 50vh; }
-  .actuadores-panel {
-    width     : 100%;
-    border-left: none;
-    border-top : 1px solid var(--green-mid);
-    max-height : 380px;
-  }
-  .page-title { font-size: 1rem; }
-  .unrn-badge { display: none; }
+/* ─── Hero / Presentación ────────────────────────────────────────── */
+.hero-section {
+  position  : relative;
+  padding   : 4rem 5% 3.5rem;
+  background: #060d06;
+  border-bottom: 1px solid #1a301a;
+  overflow  : hidden;
+  display   : flex;
+  align-items: center;
+  gap       : 4rem;
+  flex-wrap : wrap;
+}
+
+/* Halo de fondo */
+.hero-glow {
+  position     : absolute;
+  top: -120px; left: 10%;
+  width        : 520px;
+  height       : 520px;
+  background   : radial-gradient(ellipse, rgba(74, 222, 128, 0.07) 0%, transparent 70%);
+  pointer-events: none;
+  z-index      : 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index : 1;
+  flex    : 1;
+  min-width: 280px;
+}
+
+/* Eyebrow */
+.hero-eyebrow {
+  display      : flex;
+  gap          : 0.6rem;
+  flex-wrap    : wrap;
+  margin-bottom: 1.2rem;
+}
+
+.hero-badge {
+  font-family   : 'Courier New', monospace;
+  font-size     : 0.62rem;
+  font-weight   : 700;
+  letter-spacing: 0.14em;
+  color         : #4ade80;
+  background    : #0a2a0a;
+  border        : 1px solid #2a5a2a;
+  padding       : 3px 12px;
+  border-radius : 4px;
+}
+
+/* Título principal */
+.hero-title {
+  font-family  : 'Georgia', 'Times New Roman', serif;
+  font-size    : clamp(2rem, 5vw, 3.2rem);
+  font-weight  : normal;
+  color        : #e8f5e8;
+  line-height  : 1.15;
+  margin-bottom: 1.4rem;
+  letter-spacing: -0.01em;
+}
+
+.hero-title-accent {
+  color: #4ade80;
+}
+
+/* Descripción */
+.hero-desc {
+  font-family  : 'Georgia', serif;
+  font-size    : 1rem;
+  color        : #7aaa7a;
+  line-height  : 1.8;
+  max-width    : 600px;
+  margin-bottom: 1.8rem;
+}
+
+/* Tags */
+.hero-tags {
+  display      : flex;
+  flex-wrap    : wrap;
+  gap          : 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.hero-tag {
+  font-family   : 'Courier New', monospace;
+  font-size     : 0.7rem;
+  color         : #5a8a5a;
+  background    : #0d1a0d;
+  border        : 1px solid #1a3a1a;
+  padding       : 4px 12px;
+  border-radius : 20px;
+  transition    : all 0.2s;
+}
+
+.hero-tag:hover {
+  color        : #4ade80;
+  border-color : #2a5a2a;
+}
+
+/* Meta info */
+.hero-meta {
+  display    : flex;
+  align-items: center;
+  gap        : 1.2rem;
+  flex-wrap  : wrap;
+}
+
+.hero-meta-item {
+  display       : flex;
+  flex-direction: column;
+  gap           : 2px;
+}
+
+.meta-label {
+  font-family   : 'Courier New', monospace;
+  font-size     : 0.6rem;
+  letter-spacing: 0.1em;
+  color         : #3a5a3a;
+  text-transform: uppercase;
+}
+
+.meta-value {
+  font-family: 'Georgia', serif;
+  font-size  : 0.85rem;
+  color      : #a0c8a0;
+}
+
+.hero-meta-divider {
+  width     : 1px;
+  height    : 32px;
+  background: #1a3a1a;
+  flex-shrink: 0;
+}
+
+/* Grid de módulos */
+.hero-modules {
+  position: relative;
+  z-index : 1;
+  display : grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap     : 0.8rem;
+  flex-shrink: 0;
+}
+
+.module-card {
+  background   : #0d1a0d;
+  border       : 1px solid #1a3a1a;
+  border-radius: 12px;
+  padding      : 1.1rem 1.2rem;
+  display      : flex;
+  flex-direction: column;
+  align-items  : center;
+  gap          : 0.5rem;
+  transition   : all 0.25s ease;
+  cursor       : default;
+}
+
+.module-card:hover {
+  background  : #111f11;
+  border-color: #2a5a2a;
+  transform   : translateY(-2px);
+  box-shadow  : 0 4px 20px rgba(74, 222, 128, 0.07);
+}
+
+.module-icon { font-size: 1.6rem; line-height: 1; }
+
+.module-name {
+  font-family   : 'Courier New', monospace;
+  font-size     : 0.62rem;
+  letter-spacing: 0.08em;
+  color         : #5a8a5a;
+  text-transform: uppercase;
+}
+
+/* ─── Responsive hero ────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .hero-section   { flex-direction: column; gap: 2.5rem; padding: 3rem 5% 2.5rem; }
+  .hero-modules   { grid-template-columns: repeat(3, 1fr); width: 100%; }
+  .hero-meta      { gap: 0.8rem; }
+  .hero-meta-divider { display: none; }
+}
+
+@media (max-width: 540px) {
+  .hero-modules { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 540px) {

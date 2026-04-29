@@ -170,6 +170,77 @@ const dispositivos = computed(() => [
         <div class="unrn-badge">UNRN · Lic. Sistemas · 2026</div>
       </section>
 
+      <!-- ══════════════════════ HERO / PRESENTACIÓN ══════════════════════ -->
+      <section class="hero-section">
+        <div class="hero-glow"></div>
+        <div class="hero-content">
+          <div class="hero-eyebrow">
+            <span class="hero-badge">PROTOTIPO · 2026</span>
+            <span class="hero-badge">UNRN · LIC. SISTEMAS</span>
+          </div>
+          <h1 class="hero-title">
+            Gemelo Digital<br />
+            <span class="hero-title-accent">Invernadero Experimental</span>
+          </h1>
+          <p class="hero-desc">
+            Sistema de monitoreo y control en tiempo real para un invernadero de producción experimental.
+            Integra un gemelo digital 3D interactivo, lectura continua de sensores ambientales y de suelo,
+            control manual de actuadores mecánicos, visualización de video interno y análisis histórico
+            de variables climáticas mediante gráficos de tendencia y correlación.
+          </p>
+          <div class="hero-tags">
+            <span class="hero-tag">🌡️ Temperatura</span>
+            <span class="hero-tag">💧 Humedad</span>
+            <span class="hero-tag">☀️ Luminosidad</span>
+            <span class="hero-tag">🏗️ Gemelo 3D</span>
+            <span class="hero-tag">📷 Cámara en vivo</span>
+            <span class="hero-tag">📊 Análisis histórico</span>
+          </div>
+          <div class="hero-meta">
+            <div class="hero-meta-item">
+              <span class="meta-label">Institución</span>
+              <span class="meta-value">Universidad Nacional de Río Negro</span>
+            </div>
+            <div class="hero-meta-divider"></div>
+            <div class="hero-meta-item">
+              <span class="meta-label">Carrera</span>
+              <span class="meta-value">Licenciatura en Sistemas</span>
+            </div>
+            <div class="hero-meta-divider"></div>
+            <div class="hero-meta-item">
+              <span class="meta-label">Año</span>
+              <span class="meta-value">2026</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-modules">
+          <div class="module-card">
+            <span class="module-icon">🏗️</span>
+            <span class="module-name">Gemelo 3D</span>
+          </div>
+          <div class="module-card">
+            <span class="module-icon">📷</span>
+            <span class="module-name">Cámara IP</span>
+          </div>
+          <div class="module-card">
+            <span class="module-icon">📡</span>
+            <span class="module-name">Sensores</span>
+          </div>
+          <div class="module-card">
+            <span class="module-icon">📊</span>
+            <span class="module-name">Gráficos</span>
+          </div>
+          <div class="module-card">
+            <span class="module-icon">⚙️</span>
+            <span class="module-name">Actuadores</span>
+          </div>
+          <div class="module-card">
+            <span class="module-icon">🚨</span>
+            <span class="module-name">Alertas</span>
+          </div>
+        </div>
+      </section>
+
       <!-- ═══════════════════ SECCIÓN 1: GEMELO DIGITAL ═══════════════════ -->
       <section class="twin-section">
         <div class="twin-header">
