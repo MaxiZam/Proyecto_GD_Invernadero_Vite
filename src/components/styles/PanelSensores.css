@@ -1,8 +1,8 @@
 /* ─── Sección sensores ───────────────────────────────────────────── */
 .sensores-section {
   padding    : 2rem 5%;
-  background : #0e1a0e;
-  border-top : 1px solid #1f3a1f;
+  background : var(--bg-card);
+  border-top : 1px solid var(--border-color);
 }
 
 .section-header {
@@ -18,23 +18,18 @@
   font-size     : 0.65rem;
   font-weight   : 700;
   letter-spacing: 0.12em;
-  color         : #4ade80;
-  background    : #0a2a0a;
-  border        : 1px solid #2a5a2a;
+  color         : var(--green-dark);
+  background    : #ecfdf5;
+  border        : 1px solid var(--green-mid);
   padding       : 3px 10px;
   border-radius : 4px;
-  animation     : blink 2s ease-in-out infinite;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.4; }
 }
 
 .section-header h2 {
   font-family: 'Georgia', serif;
-  color      : #e8f5e8;
+  color      : var(--text-primary);
   font-size  : 1.4rem;
+  font-weight: 600;
   margin     : 0;
 }
 
@@ -42,7 +37,8 @@
   margin-left: auto;
   font-family: 'Courier New', monospace;
   font-size  : 0.72rem;
-  color      : #4a7a4a;
+  color      : var(--text-muted);
+  font-weight: 600;
 }
 
 /* ─── Grid de tarjetas ───────────────────────────────────────────── */
@@ -53,8 +49,8 @@
 }
 
 .sensor-card {
-  background   : #141f14;
-  border       : 1px solid #1f3a1f;
+  background   : var(--bg-main);
+  border       : 1px solid var(--border-color);
   border-radius: 14px;
   padding      : 1.4rem;
   display      : flex;
@@ -63,39 +59,51 @@
   transition   : all 0.3s ease;
   position     : relative;
   overflow     : hidden;
+  box-shadow   : 0 2px 4px rgba(0,0,0,0.02);
 }
 
+.sensor-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+  border-color: #cbd5e1;
+}
+
+/* Barra indicadora superior (detalle de diseño sutil) */
 .sensor-card::before {
   content   : '';
   position  : absolute;
   top: 0; left: 0; right: 0;
-  height    : 2px;
-  background: #4ade80;
-  opacity   : 0.4;
+  height    : 3px;
+  background: var(--green-primary);
+  opacity   : 0.8;
   transition: opacity 0.3s;
 }
 
 .sensor-card.alerta {
-  border-color: #7a1a1a;
-  background  : #1f0e0e;
+  border-color: #fca5a5;
+  background  : #fef2f2;
 }
 
 .sensor-card.alerta::before {
-  background: #ff4444;
-  opacity   : 0.8;
+  background: var(--accent-red);
+  opacity   : 0.9;
   animation : pulse-bar 1.2s ease infinite;
 }
 
 @keyframes pulse-bar {
-  0%, 100% { opacity: 0.8; }
-  50%       { opacity: 0.2; }
+  0%, 100% { opacity: 0.9; }
+  50%       { opacity: 0.4; }
 }
 
 /* ─── Contenido de tarjeta ───────────────────────────────────────── */
 .sensor-icon {
-  font-size  : 2rem;
+  font-size  : 2.2rem;
   line-height: 1;
   flex-shrink: 0;
+  background : #ffffff;
+  padding    : 10px;
+  border-radius: 12px;
+  box-shadow : 0 2px 4px rgba(0,0,0,0.04);
 }
 
 .sensor-info { flex: 1; }
@@ -104,7 +112,8 @@
   font-family   : 'Courier New', monospace;
   font-size     : 0.7rem;
   letter-spacing: 0.08em;
-  color         : #5a8a5a;
+  color         : var(--text-muted);
+  font-weight   : 700;
   text-transform: uppercase;
   margin-bottom : 0.4rem;
 }
@@ -113,22 +122,22 @@
   font-family  : 'Georgia', serif;
   font-size    : 2.4rem;
   font-weight  : bold;
-  color        : #e8f5e8;
+  color        : var(--text-primary);
   line-height  : 1;
   margin-bottom: 0.6rem;
 }
 
-.sensor-card.alerta .sensor-value { color: #ff8888; }
+.sensor-card.alerta .sensor-value { color: var(--accent-red); }
 
-.unit { font-size: 1rem; color: #4ade80; margin-left: 3px; }
-.sensor-card.alerta .unit { color: #ff6666; }
+.unit { font-size: 1rem; color: var(--green-dark); margin-left: 3px; }
+.sensor-card.alerta .unit { color: var(--accent-red); }
 
 .sensor-bar-wrap {
-  height       : 5px;
-  background   : #1f3a1f;
+  height       : 6px;
+  background   : #e2e8f0;
   border-radius: 3px;
   overflow     : hidden;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
 }
 
 .sensor-bar {
@@ -137,9 +146,13 @@
   transition   : width 0.8s ease, background 0.5s ease;
 }
 
-.sensor-status { font-family: 'Courier New', monospace; font-size: 0.68rem; }
-.sensor-status.ok   { color: #4ade80; }
-.sensor-status.warn { color: #ff6666; }
+.sensor-status { 
+  font-family: 'Courier New', monospace; 
+  font-size: 0.68rem; 
+  font-weight: 600;
+}
+.sensor-status.ok   { color: var(--green-dark); }
+.sensor-status.warn { color: var(--accent-red); }
 
 /* ─── Responsive ─────────────────────────────────────────────────── */
 @media (max-width: 768px) {

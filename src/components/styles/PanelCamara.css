@@ -1,8 +1,7 @@
 /* ─── Sección cámara ─────────────────────────────────────────────── */
 .camara-section {
-  background   : #080f08;
-  border-top   : 1px solid #1a301a;
-  border-bottom: 1px solid #1a301a;
+  background   : var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .camara-header {
@@ -19,30 +18,16 @@
 .camara-header h2 {
   font-family  : 'Georgia', serif;
   font-size    : 1.35rem;
-  color        : #e8f5e8;
-  font-weight  : normal;
+  color        : var(--text-primary);
+  font-weight  : 600;
   margin-bottom: 0.3rem;
 }
 
 .camara-header p {
   font-family   : 'Courier New', monospace;
   font-size     : 0.72rem;
-  color         : #5a8a5a;
+  color         : var(--text-muted);
   letter-spacing: 0.03em;
-}
-
-.section-badge {
-  display       : inline-block;
-  font-family   : 'Courier New', monospace;
-  font-size     : 0.65rem;
-  font-weight   : 700;
-  letter-spacing: 0.12em;
-  color         : #4ade80;
-  background    : #0a2a0a;
-  border        : 1px solid #2a5a2a;
-  padding       : 3px 10px;
-  border-radius : 4px;
-  margin-bottom : 0.5rem;
 }
 
 /* Estado EN VIVO / INACTIVO */
@@ -51,9 +36,9 @@
   font-size     : 0.7rem;
   font-weight   : 700;
   letter-spacing: 0.12em;
-  color         : #4a6a4a;
-  background    : #0a1a0a;
-  border        : 1px solid #1a3a1a;
+  color         : var(--text-muted);
+  background    : var(--bg-main);
+  border        : 1px solid var(--border-color);
   padding       : 6px 14px;
   border-radius : 20px;
   display       : flex;
@@ -64,27 +49,27 @@
 }
 
 .camara-status.is-live {
-  color       : #4ade80;
-  border-color: #2a5a2a;
-  background  : #0a2a0a;
+  color       : var(--green-dark);
+  border-color: var(--green-mid);
+  background  : #ecfdf5;
 }
 
 .live-dot {
   width        : 8px;
   height       : 8px;
   border-radius: 50%;
-  background   : #3a5a3a;
+  background   : #cbd5e1;
   display      : inline-block;
 }
 
 .camara-status.is-live .live-dot {
-  background: #4ade80;
+  background: var(--green-primary);
   animation : live-pulse 1.2s ease infinite;
 }
 
 @keyframes live-pulse {
-  0%, 100% { box-shadow: 0 0 0 0   rgba(74, 222, 128, .6); }
-  50%       { box-shadow: 0 0 0 5px rgba(74, 222, 128, 0 ); }
+  0%, 100% { box-shadow: 0 0 0 0   rgba(16, 185, 129, .6); }
+  50%       { box-shadow: 0 0 0 5px rgba(16, 185, 129, 0 ); }
 }
 
 /* ─── Layout principal ───────────────────────────────────────────── */
@@ -99,8 +84,8 @@
 /* ─── Wrapper de video ───────────────────────────────────────────── */
 .video-wrapper {
   flex          : 1;
-  background    : #000;
-  border        : 1px solid #1a3a1a;
+  background    : #111827; /* Se mantiene oscuro para el video */
+  border        : 1px solid var(--border-color);
   border-radius : 12px;
   overflow      : hidden;
   position      : relative;
@@ -108,6 +93,7 @@
   display       : flex;
   align-items   : center;
   justify-content: center;
+  box-shadow    : 0 4px 6px rgba(0,0,0,0.05);
 }
 
 .video-feed {
@@ -124,30 +110,30 @@
   align-items   : center;
   justify-content: center;
   gap           : 0.5rem;
-  color         : #2a4a2a;
+  color         : #94a3b8;
   text-align    : center;
   padding       : 2rem;
   font-family   : 'Courier New', monospace;
 }
 
-.placeholder-icon { font-size: 3.5rem; opacity: 0.4; }
+.placeholder-icon { font-size: 3.5rem; opacity: 0.6; }
 
 .video-placeholder p {
   font-size  : 1rem;
-  color      : #3a5a3a;
+  color      : #f8fafc;
   font-weight: 600;
 }
 
 .video-placeholder span {
   font-size: 0.72rem;
-  color    : #2a4a2a;
+  color    : #cbd5e1;
 }
 
 /* Spinner de carga */
 .video-loading {
   position      : absolute;
   inset         : 0;
-  background    : rgba(0, 0, 0, .75);
+  background    : rgba(17, 24, 39, .85);
   display       : flex;
   flex-direction: column;
   align-items   : center;
@@ -155,14 +141,14 @@
   gap           : 1rem;
   font-family   : 'Courier New', monospace;
   font-size     : 0.8rem;
-  color         : #4ade80;
+  color         : var(--green-primary);
 }
 
 .spinner {
   width        : 36px;
   height       : 36px;
-  border       : 3px solid #1a3a1a;
-  border-top   : 3px solid #4ade80;
+  border       : 3px solid #334155;
+  border-top   : 3px solid var(--green-primary);
   border-radius: 50%;
   animation    : spin 0.8s linear infinite;
 }
@@ -187,13 +173,13 @@
   align-items: center;
   font-family: 'Courier New', monospace;
   font-size  : 0.65rem;
-  color      : rgba(74, 222, 128, .85);
-  text-shadow: 0 0 8px rgba(0, 0, 0, .9);
+  color      : #f8fafc;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, .8);
   letter-spacing: 0.06em;
 }
 
 .hud-rec {
-  color    : #ff4444;
+  color    : #ef4444;
   animation: blink-rec 1.4s ease infinite;
   font-weight: 700;
 }
@@ -203,7 +189,7 @@
   50%       { opacity: 0.2; }
 }
 
-.hud-label { color: rgba(74, 222, 128, .7); }
+.hud-label { color: #e2e8f0; font-weight: 600; }
 
 /* ─── Panel de controles ─────────────────────────────────────────── */
 .camara-controls {
@@ -218,10 +204,11 @@
   font-family   : 'Courier New', monospace;
   font-size     : 0.72rem;
   letter-spacing: 0.1em;
-  color         : #5a8a5a;
+  color         : var(--text-muted);
+  font-weight   : 700;
   text-transform: uppercase;
   padding-bottom: 0.6rem;
-  border-bottom : 1px solid #1a3a1a;
+  border-bottom : 1px solid var(--border-color);
 }
 
 /* Tabs de modo */
@@ -234,24 +221,24 @@
   flex         : 1;
   padding      : 7px 6px;
   border-radius: 7px;
-  border       : 1px solid #1a3a1a;
+  border       : 1px solid var(--border-color);
   font-family  : 'Courier New', monospace;
   font-size    : 0.62rem;
   font-weight  : 600;
   cursor       : pointer;
-  background   : #0d1a0d;
-  color        : #4a6a4a;
+  background   : var(--bg-main);
+  color        : var(--text-muted);
   transition   : all 0.2s;
   text-align   : center;
 }
 
 .mode-tab.active {
-  background  : #0d2a0d;
-  border-color: #4ade80;
-  color       : #4ade80;
+  background  : #ecfdf5;
+  border-color: var(--green-primary);
+  color       : var(--green-dark);
 }
 
-.mode-tab:hover:not(.active) { border-color: #2a4a2a; color: #6a9a6a; }
+.mode-tab:hover:not(.active) { border-color: #cbd5e1; color: var(--text-primary); }
 
 /* Grupos de control */
 .control-group {
@@ -264,7 +251,8 @@
   font-family   : 'Courier New', monospace;
   font-size     : 0.65rem;
   letter-spacing: 0.06em;
-  color         : #4a7a4a;
+  color         : var(--text-primary);
+  font-weight   : 600;
   text-transform: uppercase;
 }
 
@@ -273,9 +261,9 @@
   width        : 100%;
   padding      : 8px 10px;
   border-radius: 7px;
-  border       : 1px solid #1a3a1a;
-  background   : #0d1a0d;
-  color        : #e8f5e8;
+  border       : 1px solid var(--border-color);
+  background   : var(--bg-card);
+  color        : var(--text-primary);
   font-family  : 'Courier New', monospace;
   font-size    : 0.72rem;
   outline      : none;
@@ -283,22 +271,22 @@
 }
 
 .control-select:focus,
-.control-input:focus  { border-color: #4ade80; }
+.control-input:focus  { border-color: var(--green-primary); }
 
 .control-select:disabled,
-.control-input:disabled { opacity: 0.5; cursor: not-allowed; }
+.control-input:disabled { opacity: 0.6; cursor: not-allowed; background: var(--bg-main); }
 
 .control-hint {
   font-family: 'Courier New', monospace;
   font-size  : 0.62rem;
-  color      : #3a5a3a;
+  color      : var(--text-muted);
   line-height: 1.5;
 }
 
-.control-hint em { color: #5a8a5a; font-style: normal; }
+.control-hint em { color: var(--text-primary); font-style: normal; font-weight: 600;}
 
 /* Botones de acción */
-.control-actions { display: flex; gap: 0.5rem; }
+.control-actions { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
 
 .btn-iniciar,
 .btn-detener {
@@ -315,29 +303,29 @@
 }
 
 .btn-iniciar {
-  background: #1a4a1a;
-  color     : #4ade80;
-  border    : 1px solid #2a5a2a;
+  background: var(--green-primary);
+  color     : #ffffff;
+  border    : 1px solid var(--green-dark);
 }
 
-.btn-iniciar:hover:not(:disabled) { background: #1f5a1f; }
-.btn-iniciar:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-iniciar:hover:not(:disabled) { background: var(--green-dark); }
+.btn-iniciar:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .btn-detener {
-  background: #3a1a1a;
-  color     : #ff8888;
-  border    : 1px solid #5a2a2a;
+  background: #fef2f2;
+  color     : #ef4444;
+  border    : 1px solid #f87171;
 }
 
-.btn-detener:hover { background: #4a1a1a; }
+.btn-detener:hover { background: #fee2e2; }
 
 /* Error */
 .camara-error {
   font-family  : 'Courier New', monospace;
   font-size    : 0.68rem;
-  color        : #ff8888;
-  background   : #1f0e0e;
-  border       : 1px solid #5a1a1a;
+  color        : #ef4444;
+  background   : #fef2f2;
+  border       : 1px solid #fca5a5;
   border-radius: 7px;
   padding      : 0.7rem 0.9rem;
   line-height  : 1.5;
@@ -349,7 +337,7 @@
   flex-direction: column;
   gap           : 0.4rem;
   margin-top    : auto;
-  border-top    : 1px solid #1a3a1a;
+  border-top    : 1px solid var(--border-color);
   padding-top   : 0.8rem;
 }
 
@@ -360,9 +348,9 @@
   font-size      : 0.65rem;
 }
 
-.info-key { color: #3a5a3a; }
-.info-val { color: #6a9a6a; }
-.info-val.live { color: #4ade80; }
+.info-key { color: var(--text-muted); font-weight: 600;}
+.info-val { color: var(--text-primary); font-weight: 600;}
+.info-val.live { color: var(--green-dark); }
 
 /* ─── Responsive ─────────────────────────────────────────────────── */
 @media (max-width: 860px) {
