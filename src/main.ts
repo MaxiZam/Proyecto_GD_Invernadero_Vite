@@ -1,5 +1,8 @@
 import { createApp } from 'vue'
-import './style.css'
 import App from './App.vue'
+import router from './router' // Importa la configuración de rutas
 
-createApp(App).mount('#app')
+const app = createApp(App)
+
+app.use(router) // Le dice a Vue que use el enrutador
+app.mount('#app') // Monta la aplicación en el div con id "app" del index.html
