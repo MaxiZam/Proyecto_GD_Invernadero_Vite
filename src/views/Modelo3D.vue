@@ -11,7 +11,8 @@ const contenedor3D = ref<HTMLElement | null>(null)
 const datosSensores = ref({
   temperatura: 24.5,
   caloventorActivo: false,
-  ventanalesAbiertos: false
+  ventanalesAbiertos: false,
+  persianasEnrolladas: false
 })
 
 // Variables globales de Three.js
@@ -21,7 +22,10 @@ let animationFrameId: number
 
 // Variables para almacenar las partes específicas del modelo de Blender
 let materialCaloventor: THREE.MeshStandardMaterial | undefined
-const ventanasMeshes: THREE.Object3D[] = [] // Arreglo para guardar los 8 ventanales
+const ventanasMeshes: THREE.Object3D[] = []
+const persianasMeshes: THREE.Object3D[] = []
+
+const escalasInicialesPersianas = new Map<string, number>()
 
 const initThreeJS = () => {
   if (!contenedor3D.value) return
@@ -63,12 +67,12 @@ const initThreeJS = () => {
           materiales.forEach(mat => {
             mat.side = THREE.DoubleSide
             
-            // Forzamos la transparencia en Three.js si el material viene con opacidad < 1 
-            // o si el nombre del material incluye "vidrio" o "plastico"
-            if (mat.opacity < 1 || mat.name.toLowerCase().includes('vidrio') || mat.name.toLowerCase().includes('plastico')) {
+            // Respetar Alpha original de Blender y activar transparencia
+            const nombreMat = mat.name.toLowerCase()
+            if (mat.opacity < 1 || nombreMat.includes('vidrio') || nombreMat.includes('plastico')) {
               mat.transparent = true
-              mat.opacity = 0.4 // Puedes ajustar este valor (0.0 a 1.0)
-              mat.depthWrite = false // Fundamental para que los vidrios no tengan errores visuales
+              mat.depthWrite = false 
+              mat.needsUpdate = true
             }
           })
         }
@@ -81,9 +85,13 @@ const initThreeJS = () => {
           }
         }
         
-        // Buscar todas las ventanas (Usamos toLowerCase() e includes() para evitar problemas de mayúsculas/minúsculas)
         if (mesh.name.toLowerCase().includes('ventanal')) {
           ventanasMeshes.push(mesh)
+        }
+
+        if (mesh.name.toLowerCase().includes('persiana')) {
+          persianasMeshes.push(mesh)
+          escalasInicialesPersianas.set(mesh.uuid, mesh.scale.y)
         }
       }
     })
@@ -119,12 +127,22 @@ const initThreeJS = () => {
         }
       }
 
-      // Aplicamos la rotación con transición suave
-      // Cambia 'rotation.x' por 'rotation.z' o 'rotation.y' si giran hacia un eje incorrecto
       ventana.rotation.x = THREE.MathUtils.lerp(ventana.rotation.x, rotacionObjetivo, 0.05);
+
+      // --- ANIMACIÓN DE LAS PERSIANAS (Enrollado sin deformar) ---
+      persianasMeshes.forEach(persiana => {
+        // 1. Recuperamos el tamaño original desde la memoria
+        const escalaOriginal = escalasInicialesPersianas.get(persiana.uuid) || 1;
+        
+        // 2. Si está enrollada (arriba) = 0.05, Si está desenrollada (abajo) = escala original
+        const escalaObjetivo = datosSensores.value.persianasEnrolladas ? 0.05 : escalaOriginal;
+
+        // 3. Aplicamos la escala suavemente
+        persiana.scale.y = THREE.MathUtils.lerp(persiana.scale.y, escalaObjetivo, 0.05);
+      });
     })
 
-    controls.update() // Necesario para el Damping (inercia)
+    controls.update()
     renderer.render(scene, camera)
   }
   
@@ -154,6 +172,7 @@ onMounted(() => {
   intervaloFetch = setInterval(() => {
     datosSensores.value.caloventorActivo = !datosSensores.value.caloventorActivo
     datosSensores.value.ventanalesAbiertos = !datosSensores.value.ventanalesAbiertos
+    datosSensores.value.persianasEnrolladas = !datosSensores.value.persianasEnrolladas
   }, 4000)
 })
 
@@ -172,6 +191,7 @@ onUnmounted(() => {
       <p>Temperatura Actual: {{ datosSensores.temperatura }} °C</p>
       <p>Estado Caloventor: {{ datosSensores.caloventorActivo ? 'ON' : 'OFF' }}</p>
       <p>Ventanales Superiores: {{ datosSensores.ventanalesAbiertos ? 'ABIERTOS' : 'CERRADOS' }}</p>
+      <p>Persianas de Sombreado: {{ datosSensores.persianasEnrolladas ? 'ENROLLADAS (ARRIBA)' : 'DESENROLLADAS (ABAJO)' }}</p>
     </div>
 
     <!-- Contenedor estricto para Three.js -->
