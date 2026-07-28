@@ -9,14 +9,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.3.1",
+    "@stomp/stompjs": "^7.3.0",
     "@tresjs/cientos": "^5.5.0",
     "@tresjs/core": "^5.6.0",
+    "admin-lte": "^4.1.0",
+    "bootstrap": "^4.6.2",
+    "sockjs-client": "^1.6.1",
     "three": "^0.183.2",
     "vue": "^3.5.25",
     "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
+    "@types/sockjs-client": "^1.5.4",
     "@types/three": "^0.184.1",
     "@vitejs/plugin-vue": "^6.0.2",
     "@vue/tsconfig": "^0.8.1",
