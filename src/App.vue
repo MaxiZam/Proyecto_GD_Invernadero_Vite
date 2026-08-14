@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <!-- Navbar Superior (Top Navigation) -->
+    <!-- Navbar Superior -->
     <nav class="main-header navbar navbar-expand-md navbar-white navbar-light border-bottom-0 shadow-sm">
       <div class="container-fluid">
         
@@ -10,7 +10,7 @@
           <span class="brand-text font-weight-bold text-success">Control GD Invernadero</span>
         </a>
 
-        <!-- Botón de menú para móviles (manejado por Vue) -->
+        <!-- Botón de menú para móviles -->
         <button class="navbar-toggler order-1" type="button" @click="toggleMenu">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -54,7 +54,6 @@
       <div class="content">
         <div class="container-fluid">
           
-          <!-- COMPONENTES EXTRAÍDOS -->
           <Modelo3D />
           <Estadisticas />
 
@@ -78,11 +77,9 @@ const toggleMenu = () => {
 }
 
 onMounted(() => {
-  // Eliminamos las clases del menú lateral y aplicamos las del menú superior
   document.body.classList.remove('sidebar-mini', 'layout-fixed')
   document.body.classList.add('hold-transition', 'layout-top-nav')
   
-  // Mantenemos el ajuste para Three.js
   setTimeout(() => {
     window.dispatchEvent(new Event('resize'))
   }, 500)
