@@ -18,21 +18,25 @@
         <!-- Enlaces del menú superior -->
         <div class="collapse navbar-collapse order-3" :class="{ 'show': isMenuOpen }">
           <ul class="navbar-nav ml-4">
+            
             <li class="nav-item">
-              <a href="#" class="nav-link active font-weight-bold">
+              <router-link to="/modelo-3d" class="nav-link font-weight-bold" active-class="active">
                 <i class="fas fa-cube mr-1"></i> Modelo 3D y Monitoreo
-              </a>
+              </router-link>
             </li>
+
             <li class="nav-item">
-              <a href="#" class="nav-link font-weight-bold">
+              <router-link to="/estadisticas" class="nav-link font-weight-bold" active-class="active">
+                <i class="fas fa-cube mr-1"></i> Estadísticas
+              </router-link>
+            </li>
+            
+            <li class="nav-item">
+              <router-link to='/historial' class="nav-link font-weight-bold" active-class="active">
                 <i class="fas fa-chart-line mr-1"></i> Historial de Datos
-              </a>
+              </router-link>
             </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link font-weight-bold">
-                <i class="fas fa-cogs mr-1"></i> Configuración
-              </a>
-            </li>
+            
           </ul>
         </div>
 
@@ -41,21 +45,13 @@
 
     <!-- Contenido Principal -->
     <div class="content-wrapper bg-light">
-      <div class="content-header">
-        <div class="container-fluid">
-          <div class="row mb-2 mt-2">
-            <div class="col-sm-6">
-              <h1 class="m-0 text-dark font-weight-bold">Monitoreo en Tiempo Real</h1>
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- Se eliminó el content-header fijo para que cada vista tenga el suyo -->
 
-      <div class="content">
+      <div class="content pt-4"> <!-- Añadí un pt-4 para dar un poco de margen superior -->
         <div class="container-fluid">
           
-          <Modelo3D />
-          <Estadisticas />
+          <!-- AQUÍ SE INYECTA LA VISTA MÁGICAMENTE -->
+          <router-view></router-view>
 
         </div>
       </div>
@@ -90,7 +86,8 @@ onMounted(() => {
 /* Estilos Globales (Colores Base) */
 :root {
   --primary-green: #2ecc71; 
-  --dark-green: #27ae60;    
+  --dark-green: #27ae60;
+  padding-bottom: 25px;
 }
 
 .bg-success {

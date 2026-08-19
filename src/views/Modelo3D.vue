@@ -242,7 +242,15 @@ defineExpose({
 </script>
 
 <template>
-  <!-- Fila principal dividida en dos columnas -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2 mt-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark font-weight-bold">Monitoreo en Tiempo Real</h1>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="row mt-3">
     
     <!-- COLUMNA IZQUIERDA: Tarjetas de Sensores y Actuadores -->
@@ -312,7 +320,7 @@ defineExpose({
 
     </div>
 
-    <!-- COLUMNA DERECHA: Renderizado del Modelo 3D -->
+    <!-- COLUMNA DERECHA: Modelo 3D -->
     <div class="col-lg-9 col-md-8">
       <div class="card card-outline card-success shadow model-card h-100">
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
