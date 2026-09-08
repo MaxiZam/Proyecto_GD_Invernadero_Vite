@@ -8,22 +8,26 @@
           <tr>
             <th>Fecha</th>
             <th>Temp. Promedio</th>
-            <th>Hum. Promedio</th>
+            <th>HumSuelo. Promedio</th>
+            <th>HumAire. Promedio</th>
             <th>Luminosidad</th>
             <th>Uso Caloventor</th>
             <th>Uso Humidificador</th>
             <th>Uso Ventanales</th>
+            <th>Uso Bomba de Agua</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="registro in historial" :key="registro.id">
             <td>{{ formatearFecha(registro.fecha) }}</td>
             <td>{{ registro.tempPromedio.toFixed(2) }} °C</td>
-            <td>{{ registro.humPromedio.toFixed(2) }} %</td>
+            <td>{{ registro.humSueloPromedio.toFixed(2) }} %</td>
+            <td>{{ registro.humAirePromedio.toFixed(2) }} %</td>
             <td>{{ registro.lumPromedio }} lux</td>
             <td>{{ registro.caloventorUsoPorcentaje.toFixed(1) }} %</td>
             <td>{{ registro.humidificadorUsoPorcentaje.toFixed(1) }} %</td>
             <td>{{ registro.ventanalesUsoPorcentaje.toFixed(1) }} %</td>
+            <td>{{ registro.bombaUsoPorcentaje.toFixed(1) }} %</td>
           </tr>
         </tbody>
       </table>
@@ -40,7 +44,7 @@ import { ref, onMounted } from 'vue'
 
 const historial = ref([])
 
-// Función para consultar el nuevo endpoint
+// Recuperar historial de datos completo
 const cargarTabla = async () => {
   try {
     const respuesta = await fetch('http://localhost:8080/api/invernadero/historial-completo')
@@ -50,11 +54,22 @@ const cargarTabla = async () => {
   }
 }
 
-// Función para que la fecha se vea como "19/08/2026" en lugar de "2026-08-19"
+// Funcion para que cambiar formato de fecha
 const formatearFecha = (fechaString) => {
-  if (!fechaString) return '-'
-  const opciones = { year: 'numeric', month: '2-digit', day: '2-digit' }
-  return new Date(fechaString).toLocaleDateString('es-AR', opciones)
+  if (!fechaString) return '-';
+  
+  const opciones = { 
+    year: 'numeric', 
+    month: '2-digit', 
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false // Cambia a true si prefieres formato AM/PM
+  };
+  
+  // Usamos toLocaleString para que incluya la hora, no solo la fecha
+  return new Date(fechaString).toLocaleString('es-AR', opciones);
 }
 
 onMounted(() => {

@@ -2,7 +2,7 @@
   <div class="dashboard-container">
     <h1 class="titulo">Análisis Agronómico Mensual</h1>
 
-    <!-- Tarjetas de Resumen Rápido -->
+    <!-- Tarjetas de resumen  -->
     <div class="tarjetas-grid" v-if="estadisticas">
       <div class="tarjeta alerta" v-if="estadisticas.diasRiesgoFungico > 0">
         <h3>Riesgo Fúngico</h3>
@@ -34,10 +34,10 @@
       </div>
     </div>
 
-    <!-- Sección de Gráficos -->
+    <!-- Seccion de graficos -->
     <div class="graficos-grid" v-if="historialCargado">
       
-      <!-- Gráfico de Tendencias (Líneas) -->
+      <!-- Graficos de tendencia -->
       <div class="grafico-card">
         <h3>Evolución Climática (Últimos 30 días)</h3>
         <div class="chart-wrapper">
@@ -45,7 +45,7 @@
         </div>
       </div>
 
-      <!-- Gráfico de Actuadores (Barras) -->
+      <!-- graficos de actuadores  -->
       <div class="grafico-card">
         <h3>Eficiencia de Actuadores (% de Uso Diario)</h3>
         <div class="chart-wrapper">
@@ -75,14 +75,14 @@ const estadisticas = ref(null)
 const historial = ref([])
 const historialCargado = ref(false)
 
-// Función para obtener los datos del Backend
+// Recuperar datos del Backend
 const cargarDatos = async () => {
   try {
-    // 1. Cargar el resumen mensual
+    // recuperar el resumen mensual
     const resStats = await fetch('http://localhost:8080/api/invernadero/estadisticas')
     estadisticas.value = await resStats.json()
 
-    // 2. Cargar el historial diario
+    // recuperar el historial diario
     const resHistorial = await fetch('http://localhost:8080/api/invernadero/historial')
     historial.value = await resHistorial.json()
     
@@ -96,14 +96,12 @@ onMounted(() => {
   cargarDatos()
 })
 
-// ==========================================
-// CONFIGURACIÓN: GRÁFICO DE LÍNEAS (CLIMA)
-// ==========================================
+
+// CONFIGURACION: grafico de lineas (sensores)
 const chartDataClima = computed(() => {
-  // Extraemos las fechas para el eje X y los datos para el eje Y
   const fechas = historial.value.map(dato => dato.fecha)
   const temperaturas = historial.value.map(dato => dato.tempPromedio)
-  const humedades = historial.value.map(dato => dato.humPromedio)
+  const humedades = historial.value.map(dato => dato.humPromedioSuelo)
 
   return {
     labels: fechas,
@@ -113,7 +111,7 @@ const chartDataClima = computed(() => {
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
         borderColor: 'rgb(255, 99, 132)',
         data: temperaturas,
-        tension: 0.4, // Curva suave
+        tension: 0.4,
         yAxisID: 'y'
       },
       {
@@ -122,7 +120,7 @@ const chartDataClima = computed(() => {
         borderColor: 'rgb(54, 162, 235)',
         data: humedades,
         tension: 0.4,
-        yAxisID: 'y1' // Lo mandamos a un segundo eje Y
+        yAxisID: 'y1'
       }
     ]
   }
@@ -143,29 +141,29 @@ const chartOptionsClima = {
       display: true,
       position: 'right',
       title: { display: true, text: 'Humedad (%)' },
-      grid: { drawOnChartArea: false } // Para que no se crucen las líneas de la grilla
+      grid: { drawOnChartArea: false }
     }
   }
 }
 
-// ==========================================
-// CONFIGURACIÓN: GRÁFICO DE BARRAS (ACTUADORES)
-// ==========================================
+
+// CONFIGURACION: grafico de barras (actuadores)
 const chartDataActuadores = computed(() => {
   return {
-    labels: ['Caloventor', 'Ventanales', 'Humidificador'],
+    labels: ['Caloventor', 'Ventanales', 'Humidificador', 'Bomba de agua'],
     datasets: [
       {
         label: '% de tiempo encendido/abierto',
         backgroundColor: [
-          'rgba(255, 159, 64, 0.7)', // Naranja para calor
-          'rgba(75, 192, 192, 0.7)', // Verde/Celeste para ventilación
-          'rgba(153, 102, 255, 0.7)' // Violeta para humedad
+          'rgba(255, 159, 64, 0.7)',
+          'rgba(75, 192, 192, 0.7)',
+          'rgba(153, 102, 255, 0.7)'
         ],
         data: [
           estadisticas.value.usoPromedioCaloventor,
           estadisticas.value.usoPromedioVentanales,
-          estadisticas.value.usoPromedioHumidificador
+          estadisticas.value.usoPromedioHumidificador,
+          estadisticas.value.usoPromedioBomba
         ]
       }
     ]
@@ -178,7 +176,7 @@ const chartOptionsActuadores = {
   scales: {
     y: {
       beginAtZero: true,
-      max: 100, // Porcentaje máximo
+      max: 100,
       title: { display: true, text: 'Porcentaje (%)' }
     }
   }
@@ -200,7 +198,7 @@ const chartOptionsActuadores = {
   padding-bottom: 0.5rem;
 }
 
-/* Estilos de las Tarjetas Superiores */
+/* Estilos de las tarjetas */
 .tarjetas-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -214,7 +212,7 @@ const chartOptionsActuadores = {
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.05);
   text-align: center;
-  border-left: 5px solid #42b983; /* Verde Vue */
+  border-left: 5px solid #42b983;
   transition: transform 0.2s;
 }
 
@@ -245,7 +243,7 @@ const chartOptionsActuadores = {
   color: #95a5a6;
 }
 
-/* Estilos de los Gráficos */
+/* Estilos de los graficos */
 .graficos-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -254,7 +252,7 @@ const chartOptionsActuadores = {
 
 @media (max-width: 900px) {
   .graficos-grid {
-    grid-template-columns: 1fr; /* Una columna en pantallas pequeñas */
+    grid-template-columns: 1fr;
   }
 }
 

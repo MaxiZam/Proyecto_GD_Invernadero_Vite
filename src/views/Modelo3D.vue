@@ -6,33 +6,46 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { Client } from '@stomp/stompjs'
 import SockJS from 'sockjs-client'
 
-// Referencias a los contenedores HTML
 const contenedor3D = ref<HTMLElement | null>(null)
 const modeloContenedor = ref<HTMLElement | null>(null)
 
-// Estado de carga para ocultar el placeholder
 const modeloCargado = ref(false)
 
-// 1. ESTADO REACTIVO (Inician en 0 / false como fallback si no hay backend)
+// ESTADO REACTIVO (inician en 0 / false como fallback si no hay backend)
 const datosInvernadero = ref({
   temperatura: 0,
-  humedad: 0,
+  humedadSuelo: 0,
+  humedadAire: 0,
   luminosidad: 0,
   caloventorActivo: false,
   ventanalesAbiertos: false,
   persianasEnrolladas: false,
-  humidificadorActivo: false
+  humidificadorActivo: false,
+  bombaActiva: false
 })
 
 // Función para reiniciar datos si se pierde la conexión
 const resetearDatos = () => {
   datosInvernadero.value.temperatura = 0
-  datosInvernadero.value.humedad = 0
+  datosInvernadero.value.humedadSuelo = 0
+  datosInvernadero.value.humedadAire = 0
   datosInvernadero.value.luminosidad = 0
   datosInvernadero.value.caloventorActivo = false
   datosInvernadero.value.ventanalesAbiertos = false
   datosInvernadero.value.persianasEnrolladas = false
   datosInvernadero.value.humidificadorActivo = false
+  datosInvernadero.value.bombaActiva = false
+}
+
+// Colores centralizados (Formato String Hexadecimal)
+const COLORES_GEMELO = {
+  VERDE_OPERATIVO: '#28a745',
+  AZUL_ACTIVO: '#007bff',
+  GRIS_INACTIVO: '#6c757d',
+  ROJO_FALLA: '#dc3545',
+  
+  ESTRUCTURA: '#f4f6f9',
+  TIERRA: '#8B5A2B'
 }
 
 let stompClient: Client
@@ -44,6 +57,10 @@ let animationFrameId: number
 
 let materialCaloventor: THREE.MeshStandardMaterial | undefined
 let materialHumidificador: THREE.MeshStandardMaterial | undefined
+let materialBombaDeAgua: THREE.MeshStandardMaterial | undefined
+
+let materialTierra: THREE.MeshStandardMaterial | undefined
+
 const ventanasMeshes: THREE.Object3D[] = []
 const persianasMeshes: THREE.Object3D[] = []
 
@@ -104,24 +121,37 @@ const initThreeJS = () => {
           })
         }
 
+        // Asignacion de materiales del modelo 3D
         if (mesh.material && !Array.isArray(mesh.material)) {
+          
           if (mesh.material.name === 'Material_Caloventor') {
             materialCaloventor = mesh.material as THREE.MeshStandardMaterial
             actualizarColorCaloventor()
           }
+          
           if (mesh.material.name === 'Material_Humidificador') {
             materialHumidificador = mesh.material as THREE.MeshStandardMaterial
             actualizarColorHumidificador()
           }
-        }
-        
-        if (mesh.name.toLowerCase().includes('ventanal')) {
-          ventanasMeshes.push(mesh)
-        }
 
-        if (mesh.name.toLowerCase().includes('persiana')) {
-          persianasMeshes.push(mesh)
-          escalasInicialesPersianas.set(mesh.uuid, mesh.scale.y)
+          if (mesh.material.name === 'Bomba_de_agua') {
+            materialBombaDeAgua = mesh.material as THREE.MeshStandardMaterial
+            actualizarColorBombaDeAgua()
+          }
+
+          if (mesh.name.toLowerCase().includes('ventanal')) {
+            ventanasMeshes.push(mesh)
+          }
+
+          if (mesh.name.toLowerCase().includes('persiana')) {
+            persianasMeshes.push(mesh)
+            escalasInicialesPersianas.set(mesh.uuid, mesh.scale.y)
+          }
+
+          if(mesh.name.toLowerCase().includes('Tierra')){
+            materialTierra = mesh.material as THREE.MeshStandardMaterial
+            materialTierra.color.set('#8B5A2B')
+          }
         }
       }
     })
@@ -129,11 +159,9 @@ const initThreeJS = () => {
     modelo.position.set(0, -1, 0)
     scene.add(modelo)
     
-    // Ocultar placeholder al terminar de cargar
     modeloCargado.value = true
   }, undefined, (error) => {
     console.error('Error al cargar el modelo GLB:', error)
-    // Aún si hay error, quitamos el placeholder para no bloquear
     modeloCargado.value = true 
   })
 
@@ -168,22 +196,33 @@ const initThreeJS = () => {
   animate()
 }
 
+// CAMBIO DE ESTADOS DE ACTUADORES
 const actualizarColorCaloventor = () => {
   if (materialCaloventor) {
-    materialCaloventor.color.setHex(datosInvernadero.value.caloventorActivo ? 0x00ff00 : 0xff0000)
+    const color = datosInvernadero.value.caloventorActivo ? COLORES_GEMELO.AZUL_ACTIVO : COLORES_GEMELO.GRIS_INACTIVO
+    materialCaloventor.color.set(color)
   }
 }
 
 const actualizarColorHumidificador = () => {
   if (materialHumidificador) {
-    materialHumidificador.color.setHex(datosInvernadero.value.humidificadorActivo ? 0x00ff00 : 0xff0000)
+    const color = datosInvernadero.value.humidificadorActivo ? COLORES_GEMELO.AZUL_ACTIVO : COLORES_GEMELO.GRIS_INACTIVO
+    materialHumidificador.color.set(color)
   }
 }
 
+const actualizarColorBombaDeAgua = () => {
+  if (materialBombaDeAgua) {
+    const color = datosInvernadero.value.bombaActiva ? COLORES_GEMELO.AZUL_ACTIVO : COLORES_GEMELO.GRIS_INACTIVO
+    materialBombaDeAgua.color.set(color)
+  }
+}
+
+// Reactividad: Si los valores cambian, actualiza los materiales
 watch(() => datosInvernadero.value.caloventorActivo, actualizarColorCaloventor)
 watch(() => datosInvernadero.value.humidificadorActivo, actualizarColorHumidificador)
+watch(() => datosInvernadero.value.bombaActiva, actualizarColorBombaDeAgua)
 
-// Manejo de resize nativo para que no se deforme el modelo
 const handleResize = () => {
   if (contenedor3D.value && camera && renderer) {
     const width = contenedor3D.value.clientWidth
@@ -206,7 +245,8 @@ onMounted(() => {
         if (message.body) {
           const datosServer = JSON.parse(message.body)
           if (datosServer.temperatura !== undefined) datosInvernadero.value.temperatura = datosServer.temperatura
-          if (datosServer.humedad !== undefined) datosInvernadero.value.humedad = datosServer.humedad
+          if (datosServer.humedadSuelo !== undefined) datosInvernadero.value.humedadSuelo = datosServer.humedadSuelo
+          if (datosServer.humedadAire !== undefined) datosInvernadero.value.humedadAire = datosServer.humedadAire
           if (datosServer.luminosidad !== undefined) datosInvernadero.value.luminosidad = datosServer.luminosidad
           if (datosServer.caloventorActivo !== undefined) datosInvernadero.value.caloventorActivo = datosServer.caloventorActivo
           if (datosServer.ventanalesAbiertos !== undefined) datosInvernadero.value.ventanalesAbiertos = datosServer.ventanalesAbiertos
@@ -252,10 +292,8 @@ defineExpose({
     </div>
   </div>
   <div class="row mt-3">
-    
-    <!-- COLUMNA IZQUIERDA: Tarjetas de Sensores y Actuadores -->
     <div class="col-lg-3 col-md-4">
-      
+      <!-- Tarjetas de sensores -->
       <!-- Temperatura -->
       <div class="small-box bg-success shadow-sm mb-3">
         <div class="inner">
@@ -270,8 +308,8 @@ defineExpose({
       <!-- Humedad -->
       <div class="small-box bg-white border border-success shadow-sm mb-3">
         <div class="inner text-success">
-          <h3>{{ datosInvernadero.humedad.toFixed(1) }}<sup style="font-size: 20px">%</sup></h3>
-          <p class="text-dark font-weight-bold">Humedad</p>
+          <h3>{{ datosInvernadero.humedadAire.toFixed(1) }}<sup style="font-size: 20px">%</sup></h3>
+          <p class="text-dark font-weight-bold">Humedad del Aire</p>
         </div>
         <div class="icon">
           <i class="fas fa-tint text-success"></i>
@@ -289,7 +327,7 @@ defineExpose({
         </div>
       </div>
 
-      <!-- Tarjeta de Actuadores (Reemplaza los textos sueltos) -->
+      <!-- Tarjeta de actuadores -->
       <div class="card card-outline card-success shadow-sm">
         <div class="card-header bg-white">
           <h3 class="card-title font-weight-bold">Estado Actuadores</h3>
@@ -314,13 +352,19 @@ defineExpose({
                 {{ datosInvernadero.persianasEnrolladas ? 'ENROLLADAS' : 'DESENROLLADAS' }}
               </span>
             </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Bomba de Agua
+              <span class="badge" :class="datosInvernadero.bombaActiva ? 'bg-primary' : 'bg-secondary'">
+                {{ datosInvernadero.bombaActiva ? 'Activo' : 'Inactivo' }}
+              </span>
+            </li>
           </ul>
         </div>
       </div>
 
     </div>
 
-    <!-- COLUMNA DERECHA: Modelo 3D -->
+    <!-- Modelo 3D -->
     <div class="col-lg-9 col-md-8">
       <div class="card card-outline card-success shadow model-card h-100">
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
@@ -355,7 +399,6 @@ defineExpose({
 .model-card {
   border-radius: 10px;
   overflow: hidden;
-  /* Altura mínima para asegurar que empareje con las tarjetas */
   min-height: 65vh; 
 }
 
