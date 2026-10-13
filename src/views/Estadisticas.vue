@@ -78,18 +78,14 @@ const historialCargado = ref(false)
 // Recuperar datos del Backend
 const cargarDatos = async () => {
   try {
-    // recuperar el resumen mensual
-    const resStats = await fetch('http://localhost:8080/api/invernadero/estadisticas')
-    estadisticas.value = await resStats.json()
-
-    // recuperar el historial diario
-    const resHistorial = await fetch('http://localhost:8080/api/invernadero/historial')
-    historial.value = await resHistorial.json()
-    
+    const [stats, hist] = await Promise.all([
+      getJson('/api/invernadero/estadisticas'),
+      getJson('/api/invernadero/historial')
+    ])
+    estadisticas.value = stats
+    historial.value = hist
     historialCargado.value = true
-  } catch (error) {
-    console.error('Error al conectar con el backend:', error)
-  }
+  } catch (e) { console.error('Error al conectar con el backend:', e) }
 }
 
 onMounted(() => {
@@ -98,33 +94,19 @@ onMounted(() => {
 
 
 // CONFIGURACION: grafico de lineas (sensores)
-const chartDataClima = computed(() => {
-  const fechas = historial.value.map(dato => dato.fecha)
-  const temperaturas = historial.value.map(dato => dato.tempPromedio)
-  const humedades = historial.value.map(dato => dato.humPromedioSuelo)
+const etiqueta = f => new Date(f).toLocaleString('es-AR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
 
-  return {
-    labels: fechas,
-    datasets: [
-      {
-        label: 'Temperatura (°C)',
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        borderColor: 'rgb(255, 99, 132)',
-        data: temperaturas,
-        tension: 0.4,
-        yAxisID: 'y'
-      },
-      {
-        label: 'Humedad (%)',
-        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-        borderColor: 'rgb(54, 162, 235)',
-        data: humedades,
-        tension: 0.4,
-        yAxisID: 'y1'
-      }
-    ]
-  }
-})
+const chartDataClima = computed(() => ({
+  labels: historial.value.map(d => etiqueta(d.fechaHora)),
+  datasets: [
+    { label: 'Temperatura (°C)', borderColor: 'rgb(255,99,132)', backgroundColor: 'rgba(255,99,132,.2)',
+      data: historial.value.map(d => d.temperaturaMedia), tension: .4, yAxisID: 'y' },
+    { label: 'Humedad suelo (%)', borderColor: 'rgb(54,162,235)', backgroundColor: 'rgba(54,162,235,.2)',
+      data: historial.value.map(d => d.humedadSueloMedia), tension: .4, yAxisID: 'y1' },
+    { label: 'Humedad aire (%)', borderColor: 'rgb(75,192,192)', backgroundColor: 'rgba(75,192,192,.2)',
+      data: historial.value.map(d => d.humedadAireMedia), tension: .4, yAxisID: 'y1' }
+  ]
+}))
 
 const chartOptionsClima = {
   responsive: true,
@@ -149,24 +131,16 @@ const chartOptionsClima = {
 
 // CONFIGURACION: grafico de barras (actuadores)
 const chartDataActuadores = computed(() => {
+  const e = estadisticas.value
   return {
-    labels: ['Caloventor', 'Ventanales', 'Humidificador', 'Bomba de agua'],
-    datasets: [
-      {
-        label: '% de tiempo encendido/abierto',
-        backgroundColor: [
-          'rgba(255, 159, 64, 0.7)',
-          'rgba(75, 192, 192, 0.7)',
-          'rgba(153, 102, 255, 0.7)'
-        ],
-        data: [
-          estadisticas.value.usoPromedioCaloventor,
-          estadisticas.value.usoPromedioVentanales,
-          estadisticas.value.usoPromedioHumidificador,
-          estadisticas.value.usoPromedioBomba
-        ]
-      }
-    ]
+    labels: ['Caloventor', 'Humidificador', 'Ventanales', 'Persianas', 'Bomba'],
+    datasets: [{
+      label: '% de tiempo activo',
+      backgroundColor: ['rgba(255,159,64,.7)', 'rgba(153,102,255,.7)', 'rgba(75,192,192,.7)',
+                        'rgba(255,205,86,.7)', 'rgba(54,162,235,.7)'],
+      data: e ? [e.usoPromedioCaloventor, e.usoPromedioHumidificador, e.usoPromedioVentanales,
+                 e.usoPromedioPersianas, e.usoPromedioBomba] : []
+    }]
   }
 })
 

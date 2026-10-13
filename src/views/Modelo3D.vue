@@ -165,33 +165,31 @@ const initThreeJS = () => {
     modeloCargado.value = true 
   })
 
-  const animate = () => {
-    animationFrameId = requestAnimationFrame(animate)
-    
-    ventanasMeshes.forEach(ventana => {
-      const nombreVentana = ventana.name.toLowerCase()
-      const esLadoDerecho = nombreVentana.includes('derecho')
-      const esLadoIzquierdo = nombreVentana.includes('izquierdo')
+  const ANGULOS = {
+  izquierdo: { abierto: 0,       cerrado: -Math.PI / 4 },
+  derecho:   { abierto: Math.PI, cerrado: Math.PI * 1.25 }
+}
 
-      let rotacionObjetivo = 0
-      if (esLadoIzquierdo) {
-        rotacionObjetivo = !datosInvernadero.value.ventanalesAbiertos ? Math.PI*(-0.25) : 0
-      } else if (esLadoDerecho) {
-        rotacionObjetivo = !datosInvernadero.value.ventanalesAbiertos ? Math.PI + Math.PI / 4 : Math.PI
-      }
+const animate = () => {
+  animationFrameId = requestAnimationFrame(animate)
 
-      ventana.rotation.x = THREE.MathUtils.lerp(ventana.rotation.x, rotacionObjetivo, 0.05)
-
-      persianasMeshes.forEach(persiana => {
-        const escalaOriginal = escalasInicialesPersianas.get(persiana.uuid) || 1
-        const escalaObjetivo = datosInvernadero.value.persianasEnrolladas ? (escalaOriginal * 0.05) : escalaOriginal
-        persiana.scale.z = THREE.MathUtils.lerp(persiana.scale.z, escalaObjetivo, 0.05)
-      })
-    })
-
-    controls.update()
-    renderer.render(scene, camera)
+  for (const v of ventanasMeshes) {
+    const n = v.name.toLowerCase()
+    const lado = n.includes('izquierdo') ? 'izquierdo' : n.includes('derecho') ? 'derecho' : null
+    if (!lado) continue
+    const objetivo = ANGULOS[lado][datosInvernadero.value.ventanalesAbiertos ? 'abierto' : 'cerrado']
+    v.rotation.x = THREE.MathUtils.lerp(v.rotation.x, objetivo, 0.05)
   }
+
+  for (const p of persianasMeshes) {
+    const base = escalasInicialesPersianas.get(p.uuid) ?? 1
+    const objetivo = datosInvernadero.value.ventanalesAbiertos ? base * 0.05 : base
+    p.scale.z = THREE.MathUtils.lerp(p.scale.z, objetivo, 0.05)   // mismo eje que se guardó
+  }
+
+  controls.update()
+  renderer.render(scene, camera)
+}
   
   animate()
 }
@@ -316,6 +314,15 @@ defineExpose({
         </div>
       </div>
 
+      <!-- Humedad del suelo -->
+      <div class="small-box bg-white border border-success shadow-sm mb-3">
+        <div class="inner text-success">
+          <h3>{{ datosInvernadero.humedadSuelo.toFixed(1) }}<sup style="font-size:20px">%</sup></h3>
+          <p class="text-dark font-weight-bold">Humedad del Suelo</p>
+        </div>
+        <div class="icon"><i class="fas fa-seedling text-success"></i></div>
+      </div>
+
       <!-- Iluminación -->
       <div class="small-box bg-success shadow-sm mb-4">
         <div class="inner">
@@ -358,6 +365,12 @@ defineExpose({
                 {{ datosInvernadero.bombaActiva ? 'Activo' : 'Inactivo' }}
               </span>
             </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Humidificador
+              <span class="badge" :class="datosInvernadero.humidificadorActivo ? 'bg-success' : 'bg-secondary'">
+                {{ datosInvernadero.humidificadorActivo ? 'ON' : 'OFF' }}
+              </span>
+            </li>
           </ul>
         </div>
       </div>
@@ -380,14 +393,14 @@ defineExpose({
         </div>
         
         <div class="card-body p-0 canvas-container" ref="modeloContenedor">
-           
-           <div v-show="modeloCargado" ref="contenedor3D" style="width: 100%; height: 100%; border: 1px solid #ccc; overflow: hidden; cursor: grab;"></div>
-           
-           <div class="placeholder-3d" v-if="!modeloCargado">
-             <i class="fas fa-cube fa-spin fa-3x text-success mb-3"></i>
-             <h5 class="text-white">Cargando Gemelo Digital...</h5>
-           </div>
-
+          <div ref="contenedor3D" class="visor-3d"></div>
+            <div class="placeholder-3d" v-if="!modeloCargado">
+              <i class="fas fa-cube fa-spin fa-3x text-success mb-3"></i>
+              <h5 class="text-white">Cargando Gemelo Digital...</h5>
+            </div>
+          <div class="placeholder-3d" v-if="errorModelo">
+            <h5 class="text-white">No se pudo cargar /invernadero.glb</h5>
+          </div>
         </div>
       </div>
     </div>
@@ -422,4 +435,22 @@ defineExpose({
   height: 100vh;
   width: 100vw;
 }
+
+.visor-3d { 
+  position: absolute; 
+  inset: 0; 
+  overflow: hidden; 
+  cursor: grab; 
+}
+
+.placeholder-3d { 
+  position: absolute; 
+  inset: 0; 
+  display: flex; 
+  flex-direction: column;
+  align-items: center; 
+  justify-content: center; 
+  pointer-events: none; 
+  }
+
 </style>

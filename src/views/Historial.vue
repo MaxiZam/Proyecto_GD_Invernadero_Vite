@@ -19,15 +19,15 @@
         </thead>
         <tbody>
           <tr v-for="registro in historial" :key="registro.id">
-            <td>{{ formatearFecha(registro.fecha) }}</td>
-            <td>{{ registro.tempPromedio.toFixed(2) }} °C</td>
-            <td>{{ registro.humSueloPromedio.toFixed(2) }} %</td>
-            <td>{{ registro.humAirePromedio.toFixed(2) }} %</td>
-            <td>{{ registro.lumPromedio }} lux</td>
-            <td>{{ registro.caloventorUsoPorcentaje.toFixed(1) }} %</td>
-            <td>{{ registro.humidificadorUsoPorcentaje.toFixed(1) }} %</td>
-            <td>{{ registro.ventanalesUsoPorcentaje.toFixed(1) }} %</td>
-            <td>{{ registro.bombaUsoPorcentaje.toFixed(1) }} %</td>
+            <td>{{ registro.fechaHora }}</td>
+            <td>{{ registro.temperaturaMedia.toFixed(2) }} °C</td>
+            <td>{{ registro.humedadSueloMedia.toFixed(2) }} %</td>
+            <td>{{ registro.humedadAireMedia.toFixed(2) }} %</td>
+            <td>{{ registro.luminosidadMedia }} lux</td>
+            <td>{{ registro.porcentajeCaloventor.toFixed(1) }} %</td>
+            <td>{{ registro.porcentajeHumidificador.toFixed(1) }} %</td>
+            <td>{{ registro.porcentajeVentanales.toFixed(1) }} %</td>
+            <td>{{ registro.porcentajeBomba.toFixed(1) }} %</td>
           </tr>
         </tbody>
       </table>
@@ -39,41 +39,22 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { getJson } from '../services/api'
 
-const historial = ref([])
-
-// Recuperar historial de datos completo
-const cargarTabla = async () => {
-  try {
-    const respuesta = await fetch('http://localhost:8080/api/invernadero/historial-completo')
-    historial.value = await respuesta.json()
-  } catch (error) {
-    console.error('Error al cargar la tabla:', error)
-  }
+interface Registro {
+  id: number; fechaHora: string
+  temperaturaMedia: number; humedadSueloMedia: number; humedadAireMedia: number; luminosidadMedia: number
+  porcentajeCaloventor: number; porcentajeHumidificador: number
+  porcentajeVentanales: number; porcentajePersianas: number; porcentajeBomba: number
 }
+const historial = ref<Registro[]>([])
+const estado = ref<'cargando' | 'ok' | 'error'>('cargando')
 
-// Funcion para que cambiar formato de fecha
-const formatearFecha = (fechaString) => {
-  if (!fechaString) return '-';
-  
-  const opciones = { 
-    year: 'numeric', 
-    month: '2-digit', 
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false // Cambia a true si prefieres formato AM/PM
-  };
-  
-  // Usamos toLocaleString para que incluya la hora, no solo la fecha
-  return new Date(fechaString).toLocaleString('es-AR', opciones);
-}
-
-onMounted(() => {
-  cargarTabla()
+onMounted(async () => {
+  try { historial.value = await getJson<Registro[]>('/api/invernadero/historial-completo?size=200'); estado.value = 'ok' }
+  catch (e) { console.error(e); estado.value = 'error' }
 })
 </script>
 

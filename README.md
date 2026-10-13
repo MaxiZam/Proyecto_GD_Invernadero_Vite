@@ -15,7 +15,7 @@ Este proyecto es una simulación integral de un Gemelo Digital para un invernade
 
 Antes de ejecutar el proyecto, asegúrate de tener instalado en tu sistema:
 - [Docker](https://www.docker.com/products/docker-desktop) instalado y ejecutándose.
-- [Java JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) o superior.
+- [Java JDK 21](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html) o superior.
 - [Node.js](https://nodejs.org/) (versión 18 o superior) y NPM.
 - Maven (Opcional, el proyecto incluye el wrapper `mvnw`).
 
