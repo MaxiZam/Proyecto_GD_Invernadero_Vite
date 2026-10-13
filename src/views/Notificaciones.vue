@@ -66,7 +66,7 @@ onMounted(() => {
 
   stompClient.debug = () => {};
 
-  stompClient.connect({}, (frame: any) => {
+  stompClient.connect({}, () => {
     stompClient.subscribe('/topic/alertas', (mensaje: any) => {
       const nuevaAlerta = JSON.parse(mensaje.body) as AlertaDTO;
       alertas.value.push(nuevaAlerta);
