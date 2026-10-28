@@ -11,6 +11,9 @@ export interface Telemetria {
 export interface Alerta {
   id: number; tipo: string; componente: string; mensaje: string; severidad: string; timestamp: string
 }
+export interface MuestraViva {
+  t: number; temperatura: number; humedadSuelo: number; humedadAire: number; luminosidad: number
+}
 
 const INICIAL: Telemetria = {
   temperatura: 0, humedadSuelo: 0, humedadAire: 0, luminosidad: 0,
@@ -19,12 +22,14 @@ const INICIAL: Telemetria = {
   esDeDia: true
 }
 const MAX_ALERTAS = 100
+const MAX_MUESTRAS = 200          // ~10 min con una muestra cada 3 s
 const SIN_DATOS_MS = 10_000
 const WS_URL = import.meta.env.VITE_WS_URL ?? 'http://localhost:8080/ws-invernadero'
 
 // Estado compartido (una sola conexión para toda la aplicación)
 const telemetria = reactive<Telemetria>({ ...INICIAL })
 const alertas = ref<Alerta[]>([])
+const muestras = ref<MuestraViva[]>([])
 const conectado = ref(false)
 const ultimaMuestra = ref(0)
 const ahora = ref(Date.now())
@@ -45,8 +50,15 @@ export function conectar() {
     onConnect: () => {
       conectado.value = true
       c.subscribe('/topic/sensores', m => {
-        Object.assign(telemetria, JSON.parse(m.body))
+        const d = JSON.parse(m.body) as Telemetria
+        Object.assign(telemetria, d)
         ultimaMuestra.value = Date.now()
+        muestras.value.push({
+          t: ultimaMuestra.value,
+          temperatura: d.temperatura, humedadSuelo: d.humedadSuelo,
+          humedadAire: d.humedadAire, luminosidad: d.luminosidad
+        })
+        if (muestras.value.length > MAX_MUESTRAS) muestras.value.shift()
       })
       c.subscribe('/topic/alertas', m => {
         alertas.value.unshift({ ...JSON.parse(m.body), id: ++contador })
@@ -64,7 +76,7 @@ export function conectar() {
 }
 
 export const useInvernadero = () => ({
-  telemetria, alertas, conectado, sinDatos,
+  telemetria, alertas, muestras, conectado, sinDatos,
   descartarAlerta: (id: number) => { alertas.value = alertas.value.filter(a => a.id !== id) },
   limpiarAlertas: () => { alertas.value = [] }
 })
