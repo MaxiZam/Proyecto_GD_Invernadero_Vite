@@ -36,7 +36,7 @@
                   La generación y el comportamiento del envío de datos de los sensores se simulan de manera continua mediante un robusto proyecto backend desarrollado en Java con el framework Spring Boot, el cual también orquesta la lógica reactiva de los actuadores y la persistencia de la información.
                 </p>
                 <p class="text-justify text-muted" style="font-size: 1.1rem; line-height: 1.6;">
-                  Por su parte, la interfaz de usuario (frontend) ha sido construida utilizando Vue.js 3, integrando herramientas de vanguardia como TresJS para la renderización interactiva del modelo 3D, Chart.js para la visualización de métricas y tendencias, y el ecosistema de AdminLTE 3 junto a Bootstrap para lograr un diseño visual responsivo y profesional.
+                  Por su parte, la interfaz de usuario (frontend) ha sido construida utilizando Vue.js 3, integrando herramientas de vanguardia como Three.js para la renderización interactiva del modelo 3D, Chart.js para la visualización de métricas y tendencias, y el ecosistema de AdminLTE 3 junto a Bootstrap para lograr un diseño visual responsivo y profesional.
                 </p>
                 <p class="text-justify text-muted" style="font-size: 1.1rem; line-height: 1.6;">
                   Aquí podrá observar la sincronización inmediata entre las variables ambientales simuladas (temperatura, humedad, luminosidad), la reacción autónoma del equipamiento (ventilación, calefacción, humidificación) y su representación tanto espacial como estadística.
@@ -48,6 +48,12 @@
                   </router-link>
                   <router-link to="/historial" class="btn btn-outline-secondary btn-lg shadow-sm">
                     <i class="fas fa-database mr-2"></i> Consultar Base de Datos
+                  </router-link>
+                  <router-link to="/control" class="btn btn-outline-success btn-lg ml-3 shadow-sm">
+                    <i class="fas fa-toggle-on mr-2"></i> Control de Actuadores
+                  </router-link>
+                  <router-link to="/umbrales" class="btn btn-outline-secondary btn-lg ml-3 shadow-sm">
+                    <i class="fas fa-sliders mr-2"></i> Umbrales
                   </router-link>
                 </div>
               </div>
@@ -93,7 +99,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 </script>
 
 <style scoped>
